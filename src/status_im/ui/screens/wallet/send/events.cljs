@@ -3,6 +3,7 @@
             [re-frame.core :as re-frame]
             [status-im.i18n :as i18n]
             [status-im.native-module.core :as status]
+            [status-im.ui.screens.db :as db]
             [status-im.ui.screens.wallet.db :as wallet.db]
             [status-im.utils.ethereum.core :as ethereum]
             [status-im.utils.ethereum.erc20 :as erc20]
@@ -274,3 +275,8 @@
   :wallet.send/set-gas-price
   (fn [{:keys [db]} [_ gas-price]]
     {:db (assoc-in db [:wallet :send-transaction :gas-price] (money/bignumber gas-price))}))
+
+(handlers/register-handler-fx
+  :wallet.send/reset-gas-default
+  (fn [{:keys [db]}]
+    {:db (assoc-in db [:wallet :send-transaction] db/transaction-send-default)}))
