@@ -1,4 +1,4 @@
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from tests import info
 from views.base_element import BaseButton, BaseEditBox, BaseText
 from views.base_view import BaseView
@@ -131,3 +131,10 @@ class ChatView(BaseView):
 
     def get_messages_sent_by_user(self, username):
         return MessageByUsername(self.driver, username).find_elements()
+
+    def send_eth_to_request(self, request, sender_password):
+        gas_popup = self.element_by_text_part('Send transaction')
+        request.click_until_presence_of_element(gas_popup)
+        send_transaction = self.get_send_transaction_view()
+        self.send_message_button.click_until_presence_of_element(send_transaction.sign_transaction_button)
+        send_transaction.sign_transaction(sender_password)
