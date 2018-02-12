@@ -202,3 +202,14 @@
                          :content             (i18n/label :t/transactions-delete-content)
                          :confirm-button-text (i18n/label :t/confirm)
                          :on-accept           #(re-frame/dispatch [:wallet/discard-unsigned-transaction transaction-id])}}))
+
+(handlers/register-handler-db
+  :wallet/update-gas-price
+  (fn [{:keys [web3] :as db}]
+    (ethereum/gas-price web3 #(re-frame/dispatch [:wallet/update-gas-price-success %2]))
+    db))
+
+(handlers/register-handler-db
+  :wallet/update-gas-price-success
+  (fn [db [_ price]]
+    (assoc-in db [:wallet :send-transaction :gas-price] price)))
